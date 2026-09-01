@@ -1,0 +1,18 @@
+# VeloRoute / CourierGiant — Render Blueprint
+# Service is configured as Docker on Render; Dockerfile uses Next.js standalone output.
+
+services:
+  - type: web
+    name: couriergiant
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        sync: false
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false
+      - key: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+        sync: false
