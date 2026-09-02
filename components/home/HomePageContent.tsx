@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { MktContainer, MktSection, MktEyebrow, MktCTA, MktBtn } from '@/components/marketing/MarketingUI';
 import { Reveal, StaggerReveal } from '@/components/marketing/ScrollReveal';
+import TestimonialsSlider from '@/components/marketing/TestimonialsSlider';
 import { StackScrollSection } from '@/components/marketing/StackScroll';
 import { HOME_IMAGES, IMAGE_ALT } from '@/lib/marketing-images';
 import { PROCESS_STEPS, SERVICES, SITE } from '@/lib/site-config';
@@ -276,6 +277,8 @@ export default function HomePageContent() {
           </StaggerReveal>
         </MktContainer>
       </MktSection>
+
+      <TestimonialsSlider />
 
       <Reveal variant="zoom-in">
         <MktCTA

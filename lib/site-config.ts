@@ -43,12 +43,48 @@ export const SITE = {
   legalEmail: siteEmail('legal'),
 } as const;
 
-export const HOME_SLIDES = [
+export type HomeHeroSlide = {
+  image: string;
+  imageAlt: string;
+  collage: {
+    leftA: string;
+    leftB: string;
+    rightA: string;
+    rightB: string;
+    leftAAlt: string;
+    leftBAlt: string;
+    rightAAlt: string;
+    rightBAlt: string;
+  };
+  highlights: string[];
+  eyebrow: string;
+  title: string;
+  description: string;
+  primaryCta: string;
+  primaryHref: string;
+  secondaryCta: string;
+  secondaryHref: string;
+};
+
+export const HOME_SLIDES: HomeHeroSlide[] = [
   {
     image: HOME_IMAGES.hero.fleet,
-    eyebrow: 'National courier network',
+    imageAlt: IMAGE_ALT.heroFleet,
+    collage: {
+      leftA: HOME_IMAGES.hero.fleet,
+      leftB: HOME_IMAGES.process.bookPickup,
+      rightA: HOME_IMAGES.process.liveRouting,
+      rightB: HOME_IMAGES.process.scanTrack,
+      leftAAlt: IMAGE_ALT.heroFleet,
+      leftBAlt: IMAGE_ALT.bookPickup,
+      rightAAlt: IMAGE_ALT.liveRouting,
+      rightBAlt: IMAGE_ALT.scanTrack,
+    },
+    highlights: ['60-min pickup', 'Metro courier', 'Live GPS'],
+    eyebrow: 'Same-day courier',
     title: 'Logistics that moves at your speed.',
-    description: 'Same-day metro runs, regional freight, and live tracking — one platform for ops teams that cannot slip.',
+    description:
+      'Same-day metro runs, regional freight, and live tracking — one platform for ops teams that cannot slip.',
     primaryCta: 'Book a pickup',
     primaryHref: '/contact',
     secondaryCta: 'View pricing',
@@ -56,9 +92,22 @@ export const HOME_SLIDES = [
   },
   {
     image: HOME_IMAGES.hero.lastMile,
+    imageAlt: IMAGE_ALT.heroLastMile,
+    collage: {
+      leftA: HOME_IMAGES.hero.lastMile,
+      leftB: HOME_IMAGES.services.lastMile,
+      rightA: HOME_IMAGES.process.proofOfDelivery,
+      rightB: HOME_IMAGES.platform,
+      leftAAlt: IMAGE_ALT.heroLastMile,
+      leftBAlt: IMAGE_ALT.lastMile,
+      rightAAlt: IMAGE_ALT.proofOfDelivery,
+      rightBAlt: IMAGE_ALT.platform,
+    },
+    highlights: ['Doorstep delivery', 'Photo POD', 'Customer ETA'],
     eyebrow: 'Last-mile delivery',
     title: 'From hub to doorstep in hours.',
-    description: 'Driver dispatch, route optimization, and proof-of-delivery photos on every stop.',
+    description:
+      'Driver dispatch, route optimization, and proof-of-delivery photos on every stop.',
     primaryCta: 'Explore services',
     primaryHref: '/services',
     secondaryCta: 'Track shipment',
@@ -66,13 +115,49 @@ export const HOME_SLIDES = [
   },
   {
     image: HOME_IMAGES.hero.freight,
-    eyebrow: 'Freight & cross-border',
-    title: 'Pallets, lanes, and customs cleared.',
-    description: 'LTL and FTL capacity with bonded handoffs and documentation built in.',
+    imageAlt: IMAGE_ALT.heroFreight,
+    collage: {
+      leftA: HOME_IMAGES.hero.freight,
+      leftB: HOME_IMAGES.services.freightPallets,
+      rightA: HOME_IMAGES.networkHub,
+      rightB: HOME_IMAGES.process.bookPickup,
+      leftAAlt: IMAGE_ALT.heroFreight,
+      leftBAlt: IMAGE_ALT.freightPallets,
+      rightAAlt: IMAGE_ALT.networkHub,
+      rightBAlt: IMAGE_ALT.bookPickup,
+    },
+    highlights: ['LTL & FTL', 'Pallet freight', 'SLA reporting'],
+    eyebrow: 'Regional freight',
+    title: 'Pallets, lanes, and hub-to-hub speed.',
+    description:
+      'LTL and FTL capacity with scan-level visibility and documented handoffs at every transfer.',
     primaryCta: 'Get a freight quote',
     primaryHref: '/quote',
-    secondaryCta: `About ${SITE.name}`,
-    secondaryHref: '/about',
+    secondaryCta: 'View services',
+    secondaryHref: '/services',
+  },
+  {
+    image: HOME_IMAGES.services.crossBorder,
+    imageAlt: IMAGE_ALT.crossBorder,
+    collage: {
+      leftA: HOME_IMAGES.services.crossBorder,
+      leftB: HOME_IMAGES.services.freightPallets,
+      rightA: HOME_IMAGES.hero.freight,
+      rightB: HOME_IMAGES.process.scanTrack,
+      leftAAlt: IMAGE_ALT.crossBorder,
+      leftBAlt: IMAGE_ALT.freightPallets,
+      rightAAlt: IMAGE_ALT.heroFreight,
+      rightBAlt: IMAGE_ALT.scanTrack,
+    },
+    highlights: ['Customs docs', 'Bonded handoffs', 'Cross-border'],
+    eyebrow: 'International lanes',
+    title: 'Cross-border cargo, cleared and tracked.',
+    description:
+      'Port-to-plant lanes with customs documentation, bonded transfers, and end-to-end scan history.',
+    primaryCta: 'Talk to freight team',
+    primaryHref: '/contact',
+    secondaryCta: 'Get a quote',
+    secondaryHref: '/quote',
   },
 ];
 

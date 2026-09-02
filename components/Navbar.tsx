@@ -134,13 +134,92 @@ function NavDropdown({
   );
 }
 
+function NavMobileSection({
+  item,
+  mobileSection,
+  setMobileSection,
+  setMobileOpen,
+}: {
+  item: Extract<NavItem, { type: 'dropdown' }>;
+  mobileSection: string | null;
+  setMobileSection: (value: string | null) => void;
+  setMobileOpen: (value: boolean) => void;
+}) {
+  return (
+    <div className="border-b border-[#e3e3e0]/80 last:border-0">
+      <button
+        type="button"
+        onClick={() => setMobileSection(mobileSection === item.label ? null : item.label)}
+        className="w-full flex items-center justify-between py-3 text-sm font-semibold text-[#111]"
+      >
+        {item.label}
+        <ChevronDown
+          className={`w-4 h-4 transition-transform ${mobileSection === item.label ? 'rotate-180' : ''}`}
+        />
+      </button>
+      {mobileSection === item.label && (
+        <div className="pb-3 pl-1 space-y-1">
+          {item.items.map((link) => {
+            const Icon = link.icon ? NAV_ICONS[link.icon] : null;
+            return (
+              <Link
+                key={`${link.href}-${link.label}`}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className="mk-nav-dropdown__link mk-nav-dropdown__link--mobile"
+              >
+                {Icon && (
+                  <span className="mk-nav-dropdown__link-icon" aria-hidden>
+                    <Icon className="w-4 h-4" strokeWidth={1.75} />
+                  </span>
+                )}
+                <span className="mk-nav-dropdown__link-body">
+                  <span className="mk-nav-dropdown__link-title">{link.label}</span>
+                  {link.description && (
+                    <span className="mk-nav-dropdown__link-desc">{link.description}</span>
+                  )}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Navbar() {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSection, setMobileSection] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!mobileOpen) {
+      document.body.classList.remove('mk-mobile-nav-open');
+      return;
+    }
+
+    document.body.classList.add('mk-mobile-nav-open');
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.classList.remove('mk-mobile-nav-open');
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    setMobileOpen(false);
+    setMobileSection(null);
+  }, [pathname]);
+
   return (
-    <header className="mk-nav-header marketing-site notranslate">
+    <header
+      className="mk-nav-header marketing-site notranslate"
+      data-mobile-theme-color="#f7f7f5"
+    >
       <div className="vr-nav-utility hidden lg:block">
         <div className="mk-container flex items-center justify-between h-9 text-xs">
           <div className="flex items-center gap-4 text-[#6b6b6b]">
@@ -201,102 +280,100 @@ export default function Navbar() {
             <button
               type="button"
               className="xl:hidden flex items-center gap-2 text-sm font-medium"
-              onClick={() => setOpen(!open)}
-              aria-expanded={open}
+              onClick={() => {
+                setMobileOpen((isOpen) => {
+                  if (isOpen) setMobileSection(null);
+                  return !isOpen;
+                });
+              }}
+              aria-expanded={mobileOpen}
+              aria-controls="mk-nav-mobile-panel"
             >
-            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             Menu
             </button>
           </div>
         </div>
       </div>
 
-      {open && (
-        <div className="xl:hidden border-t border-[#e3e3e0] bg-[#f7f7f5] px-6 py-4 max-h-[75vh] overflow-y-auto">
-          <div className="pb-4 mb-4 border-b border-[#e3e3e0]">
-            <LanguageTranslator variant="marketing" />
-          </div>
-          <div className="flex flex-wrap gap-3 pb-4 mb-4 border-b border-[#e3e3e0] text-xs">
-            {UTILITY_NAV.map((item) =>
-              item.external ? (
-                <a key={item.label} href={item.href} className="text-[#6b6b6b] font-medium">
-                  {item.label}
-                </a>
-              ) : (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="text-[#6b6b6b] font-medium"
-                >
-                  {item.label}
-                </Link>
-              ),
-            )}
-          </div>
-
-          {NAV_ITEMS.map((item) =>
-            item.type === 'dropdown' ? (
-              <div key={item.label} className="border-b border-[#e3e3e0]/80 last:border-0">
-                <button
-                  type="button"
-                  onClick={() => setMobileSection(mobileSection === item.label ? null : item.label)}
-                  className="w-full flex items-center justify-between py-3 text-sm font-semibold text-[#111]"
-                >
-                  {item.label}
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform ${mobileSection === item.label ? 'rotate-180' : ''}`}
-                  />
-                </button>
-                {mobileSection === item.label && (
-                  <div className="pb-3 pl-1 space-y-1">
-                    {item.items.map((link) => {
-                      const Icon = link.icon ? NAV_ICONS[link.icon] : null;
-                      return (
-                        <Link
-                          key={`${link.href}-${link.label}`}
-                          href={link.href}
-                          onClick={() => setOpen(false)}
-                          className="mk-nav-dropdown__link mk-nav-dropdown__link--mobile"
-                        >
-                          {Icon && (
-                            <span className="mk-nav-dropdown__link-icon" aria-hidden>
-                              <Icon className="w-4 h-4" strokeWidth={1.75} />
-                            </span>
-                          )}
-                          <span className="mk-nav-dropdown__link-body">
-                            <span className="mk-nav-dropdown__link-title">{link.label}</span>
-                            {link.description && (
-                              <span className="mk-nav-dropdown__link-desc">{link.description}</span>
-                            )}
-                          </span>
-                        </Link>
-                      );
-                    })}
-                  </div>
+      {mobileOpen && (
+        <>
+          <button
+            type="button"
+            className="mk-nav-mobile-backdrop xl:hidden"
+            aria-label="Close menu"
+            onClick={() => {
+              setMobileOpen(false);
+              setMobileSection(null);
+            }}
+          />
+          <div
+            id="mk-nav-mobile-panel"
+            className="mk-nav-mobile-panel xl:hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site navigation"
+          >
+            <div className="mk-nav-mobile-panel__inner">
+              <div className="pb-4 mb-4 border-b border-[#e3e3e0]">
+                <LanguageTranslator variant="marketing" />
+              </div>
+              <div className="flex flex-wrap gap-3 pb-4 mb-4 border-b border-[#e3e3e0] text-xs">
+                {UTILITY_NAV.map((item) =>
+                  item.external ? (
+                    <a key={item.label} href={item.href} className="text-[#6b6b6b] font-medium">
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="text-[#6b6b6b] font-medium"
+                    >
+                      {item.label}
+                    </Link>
+                  ),
                 )}
               </div>
-            ) : (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="block py-3 text-sm font-medium text-[#111] border-b border-[#e3e3e0]/80"
-              >
-                {item.label}
-              </Link>
-            ),
-          )}
 
-          <div className="pt-4 grid grid-cols-2 gap-2">
-            <MktBtn href="/tracking" variant="secondary" className="justify-center !text-xs" onClick={() => setOpen(false)}>
-              Track
-            </MktBtn>
-            <MktBtn href="/quote" className="justify-center !text-xs" onClick={() => setOpen(false)}>
-              Get a quote
-            </MktBtn>
+              {NAV_ITEMS.map((item) =>
+                item.type === 'dropdown' ? (
+                  <NavMobileSection
+                    key={item.label}
+                    item={item}
+                    mobileSection={mobileSection}
+                    setMobileSection={setMobileSection}
+                    setMobileOpen={setMobileOpen}
+                  />
+                ) : (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`mk-nav-mobile-link ${isNavActive(pathname, item.href) ? 'is-active' : ''}`}
+                  >
+                    {item.label}
+                  </Link>
+                ),
+              )}
+
+              <div className="mk-nav-mobile-panel__cta grid grid-cols-2 gap-2">
+                <MktBtn
+                  href="/tracking"
+                  variant="secondary"
+                  className="justify-center !text-xs"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Track
+                </MktBtn>
+                <MktBtn href="/quote" className="justify-center !text-xs" onClick={() => setMobileOpen(false)}>
+                  Get a quote
+                </MktBtn>
+              </div>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );

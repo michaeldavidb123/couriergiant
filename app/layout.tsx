@@ -1,6 +1,7 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
+import './marketing-hero.css';
 import SiteChrome from '@/components/SiteChrome';
 import { SITE } from '@/lib/site-config';
 
@@ -46,6 +47,23 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  applicationName: SITE.name,
+  appleWebApp: {
+    capable: true,
+    title: SITE.name,
+    statusBarStyle: 'default',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f7f7f5' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
+  ],
+  colorScheme: 'light',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
