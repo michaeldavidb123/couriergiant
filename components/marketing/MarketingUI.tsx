@@ -228,7 +228,7 @@ export function MktCTA({
           <div className="mk-cta-band__actions">
             <MktBtn href={primaryHref}>{primaryCta}</MktBtn>
             {secondaryCta && secondaryHref && (
-              <MktBtn href={secondaryHref} variant="secondary">
+              <MktBtn href={secondaryHref} variant="on-dark">
                 {secondaryCta}
               </MktBtn>
             )}

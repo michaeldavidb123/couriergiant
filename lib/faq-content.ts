@@ -195,11 +195,11 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
     items: [
       {
         q: 'How do I contact support?',
-        a: `Email ${SITE.contactEmail}, use the contact form, or call ${SITE.phone}. Enterprise accounts have 24/7 phone escalation.`,
+        a: `Email ${SITE.contactEmail} or use the contact form. Enterprise accounts get priority escalation via dedicated account teams.`,
       },
       {
         q: 'What are your support response times?',
-        a: 'Starter: next business day email. Business: under 4 hours. Enterprise: 24/7 phone with one-hour critical escalation.',
+        a: 'Starter: next business day email. Business: under 4 hours. Enterprise: 24/7 priority escalation with one-hour critical response.',
       },
       {
         q: 'How do I file a claim for loss or damage?',

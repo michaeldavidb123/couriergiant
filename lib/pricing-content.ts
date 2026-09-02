@@ -33,7 +33,7 @@ export const PLAN_COMPARISON = [
   { label: 'Priority dispatch queue', starter: false, business: true, enterprise: true },
   { label: 'Dedicated account manager', starter: false, business: false, enterprise: true },
   { label: 'Custom SLA (up to 99.9%)', starter: false, business: false, enterprise: true },
-  { label: '24/7 phone support', starter: false, business: false, enterprise: true },
+  { label: 'Priority support', starter: false, business: true, enterprise: true },
 ];
 
 export const PRICING_FAQ_GROUPS = [
@@ -88,7 +88,7 @@ export const PRICING_FAQ_GROUPS = [
     items: [
       {
         q: 'What does Enterprise include beyond Business?',
-        a: 'Dedicated account management, custom integrations, redundant hub routing, 99.9% SLA options, 24/7 phone support, and API rate limits tailored to your volume.',
+        a: 'Dedicated account management, custom integrations, redundant hub routing, 99.9% SLA options, priority escalation, and API rate limits tailored to your volume.',
       },
       {
         q: 'Is there a sandbox for API testing?',
@@ -96,7 +96,7 @@ export const PRICING_FAQ_GROUPS = [
       },
       {
         q: 'What support SLAs do you offer?',
-        a: 'Starter uses email support with next-business-day response. Business targets under 4 hours. Enterprise includes 24/7 phone and one-hour critical escalation.',
+        a: 'Starter uses email support with next-business-day response. Business targets under 4 hours. Enterprise includes 24/7 priority escalation with one-hour critical response.',
       },
       {
         q: 'Can we run a pilot before full rollout?',

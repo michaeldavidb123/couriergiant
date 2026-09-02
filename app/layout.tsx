@@ -4,6 +4,14 @@ import './globals.css';
 import './marketing-hero.css';
 import SiteChrome from '@/components/SiteChrome';
 import { SITE } from '@/lib/site-config';
+import { HOME_IMAGES, IMAGE_ALT } from '@/lib/marketing-images';
+
+const OG_IMAGE = {
+  url: HOME_IMAGES.networkHub,
+  width: 1200,
+  height: 630,
+  alt: IMAGE_ALT.networkHub,
+};
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -37,11 +45,13 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title: `${SITE.name} | ${SITE.tagline}`,
     description: SITE.description,
+    images: [OG_IMAGE],
   },
   twitter: {
     card: 'summary_large_image',
     title: `${SITE.name} | ${SITE.tagline}`,
     description: SITE.description,
+    images: [OG_IMAGE.url],
   },
   robots: {
     index: true,

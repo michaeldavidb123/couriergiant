@@ -6,7 +6,6 @@ const u = (id: string, w = 1600, h = 900) =>
 /** Change branding and contact details here — everything else derives from these. */
 const SITE_NAME = 'VeloRoute';
 const SITE_DOMAIN = 'veloroute.com';
-const SITE_PHONE = '+1 (800) 555-0142';
 
 const SITE_MAILBOXES = {
   contact: 'hello',
@@ -22,16 +21,9 @@ export function siteEmail(mailbox: keyof typeof SITE_MAILBOXES | string): string
   return `${local}@${SITE_DOMAIN}`;
 }
 
-export function sitePhoneTel(phone: string = SITE_PHONE): string {
-  return phone.replace(/\D/g, '');
-}
-
 export const SITE = {
   name: SITE_NAME,
   domain: SITE_DOMAIN,
-  phone: SITE_PHONE,
-  phoneTel: sitePhoneTel(),
-  phoneHref: `tel:${sitePhoneTel()}`,
   tagline: 'Courier & last-mile logistics',
   description:
     'Same-day courier, freight forwarding, and real-time tracking for businesses that need reliable delivery at scale.',
@@ -439,7 +431,6 @@ export const NAV_ITEMS: NavItem[] = [
 
 export const UTILITY_NAV = [
   { href: '/tracking', label: 'Track shipment' },
-  { href: SITE.phoneHref, label: SITE.phone, external: true },
 ];
 
 export const FOOTER_LINKS = {
@@ -456,7 +447,7 @@ export const FOOTER_LINKS = {
     { href: '/faq', label: 'FAQ' },
     { href: '/quote', label: 'Get a quote' },
     { href: '/contact', label: 'Contact' },
-    { href: '/contact', label: 'Request pickup' },
+    { href: '/quote', label: 'Request pickup' },
   ],
   Company: [
     { href: '/about', label: 'About us' },
@@ -559,6 +550,6 @@ export const PRICING_PLANS = [
     price: 'Custom',
     unit: '',
     desc: 'National networks & SLAs',
-    features: ['Dedicated account team', 'Custom integrations', '99.9% SLA', '24/7 phone support'],
+    features: ['Dedicated account team', 'Custom integrations', '99.9% SLA', 'Priority support'],
   },
 ];

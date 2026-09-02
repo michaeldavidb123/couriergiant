@@ -299,7 +299,7 @@ export const SERVICE_INDUSTRIES = [
     serviceLabel: 'Freight & pallets',
     bullets: [
       '99.9% SLA and quarterly business reviews',
-      '24/7 phone support and escalation paths',
+      'Priority support and escalation paths',
       'Custom API rate limits and sandbox environments',
       'Redundant sort lanes for peak season',
     ],

@@ -1,17 +1,17 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
-import { FileText, Check, Copy, MapPin, Package, Download } from 'lucide-react';
-import HalfPageHero from '@/components/HalfPageHero';
+import { Check, Copy, FileText, Download, MapPin, Package, RefreshCw } from 'lucide-react';
+import TrackingHero from '@/components/tracking/TrackingHero';
 import TrackingInput, { useTrackingIdParam } from '@/components/TrackingInput';
 import { MktSection, MktContainer } from '@/components/marketing/MarketingUI';
+import { Reveal } from '@/components/marketing/ScrollReveal';
 import { PageSections } from '@/components/marketing/PageSections';
 import ShipmentJourney from '@/components/tracking/ShipmentJourney';
 import ShipmentMap from '@/components/tracking/ShipmentMap';
 import TrackingTools from '@/components/tracking/TrackingTools';
 import TrackingTrustBar from '@/components/tracking/TrackingTrustBar';
 import { TRACKING_SECTIONS } from '@/lib/page-content';
-import { PAGE_HEROES } from '@/lib/site-config';
 import { mediaUrl, trackParcel, type CourierParcel } from '@/lib/parcels-api';
 
 function flagEmoji(code?: string | null) {
@@ -45,47 +45,100 @@ function CopyCode({ code }: { code: string }) {
   );
 }
 
-function SummaryCard({ parcel }: { parcel: CourierParcel }) {
+function statusClass(parcel: CourierParcel) {
+  if (parcel.status === 'delivered') return 'is-done';
+  if (parcel.progressMode === 'paused') return 'is-hold';
+  return 'is-live';
+}
+
+function StatusBanner({ parcel }: { parcel: CourierParcel }) {
   const delivered = parcel.status === 'delivered';
+  const current = parcel.events.find((e) => e.isCurrent);
+
   return (
-    <aside className="vr-summary-card">
-      <div className="flex items-start justify-between gap-3">
+    <div className="vr-tracking-status">
+      <div className="vr-tracking-status__main">
         <div>
-          <p className="text-xs uppercase tracking-wider text-[#6b6b6b]">Tracking Code</p>
-          <div className="flex items-center gap-2 mt-1">
-            <p className="font-mono font-semibold text-lg">{parcel.trackingCode}</p>
+          <p className="vr-tracking-status__label">Tracking code</p>
+          <div className="vr-tracking-status__code">
+            <span className="font-mono">{parcel.trackingCode}</span>
             <CopyCode code={parcel.trackingCode} />
           </div>
         </div>
-        <span className={`vr-status-pill ${delivered ? 'is-done' : parcel.progressMode === 'paused' ? 'is-hold' : 'is-live'}`}>
+        <span className={`vr-status-pill vr-status-pill--lg ${statusClass(parcel)}`}>
           {delivered ? '✓ ' : parcel.progressMode === 'paused' ? 'Paused · ' : ''}
           {statusPretty(parcel.status)}
         </span>
       </div>
-      <dl className="vr-summary-meta">
+      <div className="vr-tracking-status__route">
+        <div className="vr-tracking-status__endpoint">
+          <span className="vr-tracking-status__flag">{flagEmoji(parcel.originCountry)}</span>
+          <div>
+            <p className="vr-tracking-status__endpoint-label">Origin</p>
+            <p className="vr-tracking-status__endpoint-value">{parcel.originLabel}</p>
+          </div>
+        </div>
+        <div className="vr-tracking-status__arrow" aria-hidden />
+        <div className="vr-tracking-status__endpoint">
+          <span className="vr-tracking-status__flag">{flagEmoji(parcel.destCountry)}</span>
+          <div>
+            <p className="vr-tracking-status__endpoint-label">Destination</p>
+            <p className="vr-tracking-status__endpoint-value">{parcel.destLabel}</p>
+          </div>
+        </div>
+      </div>
+      <dl className="vr-tracking-status__meta">
+        <div>
+          <dt>Service</dt>
+          <dd>{parcel.serviceType}</dd>
+        </div>
         <div>
           <dt>Courier</dt>
           <dd>{parcel.courierName || 'VeloRoute'}</dd>
         </div>
         <div>
-          <dt>Service Type</dt>
-          <dd>{parcel.serviceType}</dd>
-        </div>
-        <div className="vr-summary-route">
-          <div>
-            <dt>Origin</dt>
-            <dd>
-              <span>{flagEmoji(parcel.originCountry)}</span> {parcel.originLabel}
-            </dd>
-          </div>
-          <div>
-            <dt>Destination</dt>
-            <dd>
-              <span>{flagEmoji(parcel.destCountry)}</span> {parcel.destLabel}
-            </dd>
-          </div>
+          <dt>Current step</dt>
+          <dd>{current?.title || statusPretty(parcel.status)}</dd>
         </div>
       </dl>
+    </div>
+  );
+}
+
+function SummaryCard({ parcel }: { parcel: CourierParcel }) {
+  return (
+    <aside className="vr-summary-card">
+      <h3 className="vr-summary-card__title">Shipment summary</h3>
+      <dl className="vr-summary-meta">
+        <div>
+          <dt>Reference</dt>
+          <dd>{parcel.referenceNo || '—'}</dd>
+        </div>
+        <div>
+          <dt>Weight</dt>
+          <dd>{parcel.weightKg != null ? `${parcel.weightKg} kg` : '—'}</dd>
+        </div>
+        <div>
+          <dt>Last updated</dt>
+          <dd>
+            {parcel.lastUpdatedAt
+              ? new Date(parcel.lastUpdatedAt).toLocaleString('en-GB', {
+                  day: '2-digit',
+                  month: 'short',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              : '—'}
+          </dd>
+        </div>
+      </dl>
+      <div className="vr-summary-card__search">
+        <p className="text-xs font-medium text-[#6b6b6b] flex items-center gap-1.5">
+          <MapPin className="w-3.5 h-3.5" />
+          Track another shipment
+        </p>
+        <TrackingInput />
+      </div>
     </aside>
   );
 }
@@ -149,7 +202,7 @@ function DetailsCard({ parcel }: { parcel: CourierParcel }) {
   ];
   return (
     <div className="mk-card p-6 space-y-4">
-      <h3 className="font-semibold text-lg">Shipment Details</h3>
+      <h3 className="font-semibold text-lg">Shipment details</h3>
       <dl className="vr-details">
         {rows.map(([label, value]) => (
           <div key={label}>
@@ -184,7 +237,9 @@ function PdfSection({ documents }: { documents: NonNullable<CourierParcel['docum
     <div className="mk-card p-6 space-y-4">
       <div>
         <h3 className="font-semibold text-lg">Shipment documents</h3>
-        <p className="text-sm text-[#6b6b6b] mt-1">Download waybills, invoices, and files released for this consignment.</p>
+        <p className="text-sm text-[#6b6b6b] mt-1">
+          Download waybills, invoices, and files released for this consignment.
+        </p>
       </div>
       <ul className="vr-pdf-list">
         {documents.map((doc) => {
@@ -205,6 +260,111 @@ function PdfSection({ documents }: { documents: NonNullable<CourierParcel['docum
         })}
       </ul>
     </div>
+  );
+}
+
+function TrackingSkeleton({ id }: { id: string }) {
+  return (
+    <MktSection tight className="vr-tracking-results bg-white">
+      <MktContainer className="space-y-6">
+        <div className="vr-tracking-skeleton vr-tracking-skeleton--banner" />
+        <div className="grid lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 vr-tracking-skeleton vr-tracking-skeleton--map" />
+          <div className="vr-tracking-skeleton vr-tracking-skeleton--panel" />
+        </div>
+        <div className="vr-tracking-skeleton vr-tracking-skeleton--journey" />
+        <p className="text-center text-sm text-[#6b6b6b] flex items-center justify-center gap-2">
+          <RefreshCw className="w-4 h-4 animate-spin" />
+          Loading shipment {id}…
+        </p>
+      </MktContainer>
+    </MktSection>
+  );
+}
+
+function TrackingEmpty() {
+  return (
+    <MktSection tight className="vr-tracking-empty bg-white">
+      <MktContainer className="max-w-2xl">
+        <Reveal variant="fade-up">
+          <div className="vr-tracking-empty__card">
+            <Package className="w-10 h-10 text-[#0d9488]" strokeWidth={1.5} />
+            <h2 className="text-lg font-semibold mt-4">Enter a tracking ID to get started</h2>
+            <p className="text-sm text-[#6b6b6b] mt-2 leading-relaxed">
+              See live status, scan history, route map, proof of delivery, and downloadable documents —
+              all in one place.
+            </p>
+          </div>
+        </Reveal>
+      </MktContainer>
+    </MktSection>
+  );
+}
+
+function TrackingError({ error }: { error: string }) {
+  return (
+    <MktSection tight className="vr-tracking-results bg-white">
+      <MktContainer className="max-w-xl">
+        <div className="mk-card p-8 space-y-4 text-center">
+          <Package className="w-10 h-10 mx-auto text-[#9a9a97]" />
+          <p className="font-semibold text-lg">No shipment found</p>
+          <p className="text-sm text-[#6b6b6b]">{error || 'Check the tracking code and try again.'}</p>
+          <TrackingInput className="!mx-auto !justify-center !max-w-md" />
+        </div>
+      </MktContainer>
+    </MktSection>
+  );
+}
+
+function TrackingResult({
+  id,
+  parcel,
+  error,
+  loading,
+}: {
+  id: string;
+  parcel: CourierParcel | null;
+  error: string;
+  loading: boolean;
+}) {
+  if (!id) return <TrackingEmpty />;
+  if (loading) return <TrackingSkeleton id={id} />;
+  if (error || !parcel) return <TrackingError error={error} />;
+
+  const gallery = parcel.images?.length ? parcel.images : parcel.parcelImageUrl ? [parcel.parcelImageUrl] : [];
+
+  return (
+    <MktSection tight className="vr-tracking-results bg-white">
+      <MktContainer className="space-y-6">
+        <Reveal variant="fade-up">
+          <StatusBanner parcel={parcel} />
+        </Reveal>
+
+        <div className="vr-tracking-results__grid">
+          <Reveal variant="fade-up" delay={80} className="vr-tracking-results__map">
+            <ShipmentMap parcel={parcel} />
+          </Reveal>
+          <Reveal variant="fade-up" delay={120} className="vr-tracking-results__aside">
+            <SummaryCard parcel={parcel} />
+          </Reveal>
+        </div>
+
+        <Reveal variant="fade-up" delay={140}>
+          <ShipmentJourney parcel={parcel} />
+        </Reveal>
+
+        <Reveal variant="fade-up" delay={160}>
+          <PartiesCard parcel={parcel} />
+        </Reveal>
+
+        <div className={`grid gap-6 ${gallery.length ? 'lg:grid-cols-2' : ''}`}>
+          <DetailsCard parcel={parcel} />
+          <PhotoGallery images={gallery} />
+        </div>
+
+        <PdfSection documents={parcel.documents || []} />
+      </MktContainer>
+    </MktSection>
   );
 }
 
@@ -250,101 +410,19 @@ function TrackingWorkspace() {
   );
 }
 
-function TrackingResult({
-  id,
-  parcel,
-  error,
-  loading,
-}: {
-  id: string;
-  parcel: CourierParcel | null;
-  error: string;
-  loading: boolean;
-}) {
-  if (!id) {
-    return (
-      <MktSection tight className="!pt-6 bg-white">
-        <MktContainer className="max-w-xl">
-          <div className="mk-card p-8 space-y-4 text-center">
-            <p className="text-sm text-[#6b6b6b]">
-              Enter a tracking ID above to see live status, scan history, map landmarks, and proof of delivery.
-            </p>
-            <p className="text-xs text-[#9a9a97]">Try a demo code: EG123456789IN or VR-482910</p>
-            <TrackingInput className="!mx-auto !justify-center" />
-          </div>
-        </MktContainer>
-      </MktSection>
-    );
-  }
-
-  if (loading) {
-    return (
-      <MktSection tight className="!pt-6 bg-white">
-        <MktContainer>
-          <div className="mk-card p-10 text-center text-sm text-[#6b6b6b]">Loading shipment {id}…</div>
-        </MktContainer>
-      </MktSection>
-    );
-  }
-
-  if (error || !parcel) {
-    return (
-      <MktSection tight className="!pt-6 bg-white">
-        <MktContainer className="max-w-xl">
-          <div className="mk-card p-8 space-y-3 text-center">
-            <Package className="w-8 h-8 mx-auto text-[#9a9a97]" />
-            <p className="font-semibold">No shipment found</p>
-            <p className="text-sm text-[#6b6b6b]">{error || 'Check the tracking code and try again.'}</p>
-          </div>
-        </MktContainer>
-      </MktSection>
-    );
-  }
-
-  const gallery = parcel.images?.length ? parcel.images : parcel.parcelImageUrl ? [parcel.parcelImageUrl] : [];
-
-  return (
-    <MktSection tight className="!pt-6 bg-white">
-      <MktContainer className="space-y-6">
-        <div className="grid lg:grid-cols-5 gap-6 items-stretch">
-          <div className="lg:col-span-3 mk-card p-6 flex flex-col justify-center gap-4">
-            <div className="flex items-center gap-2 text-sm text-[#6b6b6b]">
-              <MapPin className="w-4 h-4" />
-              Track another shipment
-            </div>
-            <TrackingInput />
-          </div>
-          <div className="lg:col-span-2">
-            <SummaryCard parcel={parcel} />
-          </div>
-        </div>
-
-        <ShipmentMap parcel={parcel} />
-        <ShipmentJourney parcel={parcel} />
-        <PartiesCard parcel={parcel} />
-
-        <div className={`grid gap-6 ${gallery.length ? 'lg:grid-cols-2' : ''}`}>
-          <DetailsCard parcel={parcel} />
-          <PhotoGallery images={gallery} />
-        </div>
-        <PdfSection documents={parcel.documents || []} />
-      </MktContainer>
-    </MktSection>
-  );
+function TrackingTrustGate() {
+  const id = useTrackingIdParam();
+  if (id) return null;
+  return <TrackingTrustBar />;
 }
 
 export default function TrackingClient() {
   return (
     <>
-      <HalfPageHero {...PAGE_HEROES.tracking} eyebrowIcon={MapPin} />
-      <MktSection tight className="!pt-0 !pb-4 bg-white">
-        <MktContainer className="max-w-xl -mt-8 relative z-10">
-          <div className="mk-card p-4 shadow-lg">
-            <TrackingInput />
-          </div>
-        </MktContainer>
-      </MktSection>
-      <TrackingTrustBar />
+      <TrackingHero />
+      <Suspense fallback={<TrackingTrustBar />}>
+        <TrackingTrustGate />
+      </Suspense>
       <Suspense fallback={null}>
         <TrackingWorkspace />
       </Suspense>

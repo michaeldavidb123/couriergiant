@@ -57,12 +57,16 @@ export default function ShipmentJourney({ parcel }: { parcel: CourierParcel }) {
       })
     : null;
 
+  const completed = parcel.events.filter((e) => e.isCompleted).length;
+  const total = parcel.events.length;
+  const progressPct = total > 0 ? Math.round((completed / total) * 100) : 0;
+
   return (
     <section className="vr-journey">
       <div className="vr-journey__head">
         <div>
           <p className="mk-eyebrow">Progress</p>
-          <h2 className="vr-journey__title">Shipment Journey</h2>
+          <h2 className="vr-journey__title">Shipment journey</h2>
         </div>
         <div className="vr-journey__live">
           {updated && <span>Last updated: {updated}</span>}
@@ -72,6 +76,13 @@ export default function ShipmentJourney({ parcel }: { parcel: CourierParcel }) {
           </span>
         </div>
       </div>
+
+      <div className="vr-journey__progress" aria-hidden>
+        <div className="vr-journey__progress-bar" style={{ width: `${progressPct}%` }} />
+      </div>
+      <p className="vr-journey__progress-label">
+        {completed} of {total} checkpoints complete · {progressPct}%
+      </p>
 
       <div className="vr-journey__scroller">
         <ol className="vr-journey__track">

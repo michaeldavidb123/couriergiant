@@ -24,7 +24,6 @@ import {
   Shield,
   Users,
   Headphones,
-  Phone,
   type LucideIcon,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -223,22 +222,11 @@ export default function Navbar() {
       <div className="vr-nav-utility hidden lg:block">
         <div className="mk-container flex items-center justify-between h-9 text-xs">
           <div className="flex items-center gap-4 text-[#6b6b6b]">
-            {UTILITY_NAV.map((item) =>
-              item.external ? (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="inline-flex items-center gap-1.5 hover:text-[#111] transition-colors"
-                >
-                  <Phone className="w-3 h-3" />
-                  {item.label}
-                </a>
-              ) : (
-                <Link key={item.href} href={item.href} className="hover:text-[#111] transition-colors">
-                  {item.label}
-                </Link>
-              ),
-            )}
+            {UTILITY_NAV.map((item) => (
+              <Link key={item.href} href={item.href} className="hover:text-[#111] transition-colors">
+                {item.label}
+              </Link>
+            ))}
           </div>
           <div className="flex items-center gap-4">
             <LanguageTranslator variant="utility" />
@@ -319,22 +307,16 @@ export default function Navbar() {
                 <LanguageTranslator variant="marketing" />
               </div>
               <div className="flex flex-wrap gap-3 pb-4 mb-4 border-b border-[#e3e3e0] text-xs">
-                {UTILITY_NAV.map((item) =>
-                  item.external ? (
-                    <a key={item.label} href={item.href} className="text-[#6b6b6b] font-medium">
-                      {item.label}
-                    </a>
-                  ) : (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="text-[#6b6b6b] font-medium"
-                    >
-                      {item.label}
-                    </Link>
-                  ),
-                )}
+                {UTILITY_NAV.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="text-[#6b6b6b] font-medium"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
               </div>
 
               {NAV_ITEMS.map((item) =>

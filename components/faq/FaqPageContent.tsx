@@ -170,7 +170,6 @@ export default function FaqPageContent() {
                 <h2 className="text-xl font-semibold tracking-tight">Still need help?</h2>
                 <p className="text-sm text-[#6b6b6b] leading-relaxed mt-2 max-w-md">
                   Our support team can help with bookings, tracking, integrations, and account setup.
-                  Enterprise customers have 24/7 phone support.
                 </p>
                 <div className="flex flex-wrap gap-3 mt-5">
                   <MktBtn href={CONTACT_HREF}>Contact support</MktBtn>
@@ -183,9 +182,6 @@ export default function FaqPageContent() {
                 </p>
                 <p className="text-sm mt-3">
                   <a href={`mailto:${SITE.contactEmail}`} className="hover:underline">{SITE.contactEmail}</a>
-                </p>
-                <p className="text-sm mt-1">
-                  <a href={SITE.phoneHref} className="hover:underline">{SITE.phone}</a>
                 </p>
                 <Link href="/pricing" className="inline-flex items-center gap-1 text-xs font-medium mt-4 hover:underline">
                   View pricing <ArrowRight className="w-3 h-3" />

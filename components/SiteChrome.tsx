@@ -7,6 +7,9 @@ import ScrollToTop from '@/components/ScrollToTop';
 import GoogleTranslateWidget from '@/components/GoogleTranslateWidget';
 import Preloader from '@/components/Preloader';
 import AddToHomeScreen from '@/components/marketing/AddToHomeScreen';
+import CookieConsentBanner from '@/components/marketing/CookieConsentBanner';
+import CookieConsentManager from '@/components/marketing/CookieConsentManager';
+import MarketingModals from '@/components/marketing/MarketingModals';
 
 export default function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -24,6 +27,9 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
       <Footer />
       <ScrollToTop />
       <AddToHomeScreen />
+      <MarketingModals />
+      <CookieConsentBanner />
+      <CookieConsentManager />
       <GoogleTranslateWidget />
     </>
   );

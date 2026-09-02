@@ -113,8 +113,8 @@ function geocodePlace(query: string) {
 }
 
 function markerColor(item: LandmarkQuery) {
-  if (item.current) return '#4f46e5';
-  if (item.completed) return '#0d9488';
+  if (item.current) return '#0d9488';
+  if (item.completed) return '#0f766e';
   return '#9ca3af';
 }
 
@@ -215,7 +215,7 @@ export default function ShipmentMap({ parcel }: { parcel: CourierParcel }) {
       <div className="vr-map__head">
         <div>
           <p className="mk-eyebrow">Route</p>
-          <h2 className="vr-journey__title">Live map</h2>
+          <h2 className="vr-journey__title">Route map</h2>
         </div>
         <div className="vr-map__head-actions">
           <p className="vr-map__caption">

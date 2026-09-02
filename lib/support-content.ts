@@ -14,11 +14,10 @@ export const SUPPORT_QUICK_ACTIONS = [
     cta: 'View FAQ',
   },
   {
-    title: 'Call support',
-    body: 'Enterprise plans include 24/7 phone escalation.',
-    href: SITE.phoneHref,
-    cta: SITE.phone,
-    external: true,
+    title: 'Contact support',
+    body: 'Submit a request — we respond within one business day on all plans.',
+    href: '/contact',
+    cta: 'Contact us',
   },
   {
     title: 'Email us',
@@ -67,7 +66,7 @@ export const SUPPORT_CHANNELS = [
 export const SUPPORT_SLA = [
   { plan: 'Starter', channel: 'Email', response: 'Next business day', hours: 'Mon–Fri, 9 AM – 6 PM ET' },
   { plan: 'Business', channel: 'Email + priority queue', response: 'Under 4 hours', hours: 'Mon–Fri, 8 AM – 8 PM ET' },
-  { plan: 'Enterprise', channel: '24/7 phone + email', response: 'Under 1 hour (critical)', hours: 'Always on' },
+  { plan: 'Enterprise', channel: '24/7 email + escalation', response: 'Under 1 hour (critical)', hours: 'Always on' },
 ];
 
 export const SUPPORT_RESOURCES = [
@@ -185,11 +184,11 @@ export const SUPPORT_ISSUE_GROUPS = [
 export const SUPPORT_FAQ = [
   {
     q: 'How do I open a support ticket?',
-    a: `Use the form on this page, email ${SITE.contactEmail}, or call ${SITE.phone}. Include your tracking ID, account email, and a short description of the issue.`,
+    a: `Use the form on this page or email ${SITE.contactEmail}. Include your tracking ID, account email, and a short description of the issue.`,
   },
   {
     q: 'What are your support hours?',
-    a: 'Starter and Business email support is available Monday–Friday. Enterprise customers have 24/7 phone access with one-hour critical escalation.',
+    a: 'Starter and Business email support is available Monday–Friday. Enterprise customers get 24/7 priority escalation with one-hour critical response.',
   },
   {
     q: 'How do I report a damaged or lost shipment?',

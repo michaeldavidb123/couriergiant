@@ -9,7 +9,6 @@ import {
   Clock,
   FileText,
   Headphones,
-  Phone,
   Shield,
 } from 'lucide-react';
 import {
@@ -219,12 +218,11 @@ export default function QuotePageContent() {
 
                 <div className="vr-quote-contact mt-4">
                   <p className="text-xs font-semibold uppercase tracking-wider text-[#6b6b6b]">
-                    Prefer to talk?
+                    Need help?
                   </p>
                   <div className="flex flex-col gap-2 mt-2">
-                    <a href={SITE.phoneHref} className="vr-quote-contact__link">
-                      <Phone className="w-3.5 h-3.5" />
-                      {SITE.phone}
+                    <a href={`mailto:${SITE.contactEmail}`} className="vr-quote-contact__link">
+                      {SITE.contactEmail}
                     </a>
                     <Link href="/support" className="vr-quote-contact__link">
                       <Headphones className="w-3.5 h-3.5" />

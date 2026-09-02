@@ -121,8 +121,6 @@ export default function ContactForm() {
               <p className="text-xs text-center text-[#6b6b6b]">
                 Or email{' '}
                 <a href={`mailto:${SITE.contactEmail}`} className="underline">{SITE.contactEmail}</a>
-                {' · '}
-                <a href={SITE.phoneHref} className="underline">{SITE.phone}</a>
               </p>
             </form>
           </div>

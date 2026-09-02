@@ -399,7 +399,7 @@ export const CONTACT_SECTIONS: PageSection[] = [
     items: [
       { q: 'What should I include in a quote request?', a: 'Origin and destination zones, weekly volume, average weight, and any special handling (temp control, signature, etc.).' },
       { q: 'Do you offer pilots?', a: 'Yes. Most new Business accounts start with a 2-week pilot lane before full rollout.' },
-      { q: 'Is there 24/7 support?', a: 'Enterprise plans include 24/7 phone support. Other plans use email with defined SLAs.' },
+      { q: 'Is there 24/7 support?', a: 'Enterprise plans include 24/7 priority escalation. Other plans use email with defined SLAs.' },
     ],
   },
   {
@@ -408,7 +408,7 @@ export const CONTACT_SECTIONS: PageSection[] = [
       { value: '<24h', label: 'Sales response time' },
       { value: '4h', label: 'Support SLA (Business)' },
       { value: '48', label: 'Hours to go live (avg.)' },
-      { value: '24/7', label: 'Enterprise phone support' },
+      { value: '24/7', label: 'Enterprise priority support' },
     ],
   },
   {
