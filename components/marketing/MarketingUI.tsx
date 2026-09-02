@@ -24,9 +24,17 @@ export function MktSection({
   );
 }
 
-export function MktEyebrow({ children, icon: Icon }: { children: React.ReactNode; icon?: LucideIcon }) {
+export function MktEyebrow({
+  children,
+  icon: Icon,
+  className = '',
+}: {
+  children: React.ReactNode;
+  icon?: LucideIcon;
+  className?: string;
+}) {
   return (
-    <span className="mk-eyebrow">
+    <span className={`mk-eyebrow ${className}`}>
       {Icon && <Icon className="w-3 h-3" />}
       {children}
     </span>
@@ -41,25 +49,35 @@ export function MktBtn({
   type = 'button',
   onClick,
   disabled = false,
+  showIcon = true,
 }: {
   href?: string;
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'teal' | 'on-dark';
   className?: string;
   type?: 'button' | 'submit';
   onClick?: () => void;
   disabled?: boolean;
+  showIcon?: boolean;
 }) {
   const cls = `mk-btn mk-btn--${variant} ${className}`;
   const content = (
     <>
       {children}
-      <span className="mk-btn-icon">
-        <ArrowUpRight className="w-3 h-3" strokeWidth={2.5} />
-      </span>
+      {showIcon && (
+        <span className="mk-btn-icon">
+          <ArrowUpRight className="w-3 h-3" strokeWidth={2.5} />
+        </span>
+      )}
     </>
   );
-  if (href) return <Link href={href} className={cls} onClick={onClick}>{content}</Link>;
+  if (href) {
+    return (
+      <Link href={href} className={cls} onClick={onClick}>
+        {content}
+      </Link>
+    );
+  }
   return (
     <button type={type} onClick={onClick} className={cls} disabled={disabled}>
       {content}
@@ -91,15 +109,13 @@ export function MktPageHero({
   return (
     <MktSection className="!pb-8">
       <MktContainer className="text-center max-w-3xl mx-auto space-y-5">
-        {eyebrow && (
-          <MktEyebrow icon={EyebrowIcon}>{eyebrow}</MktEyebrow>
-        )}
+        {eyebrow && <MktEyebrow icon={EyebrowIcon}>{eyebrow}</MktEyebrow>}
         <h1 className="mk-headline-sm">
           {title}
           {highlight && (
             <>
               <br />
-              <span>{highlight}</span>
+              <span className="text-[var(--mk-muted)]">{highlight}</span>
             </>
           )}
         </h1>
@@ -108,12 +124,82 @@ export function MktPageHero({
           <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
             {primaryCta && primaryHref && <MktBtn href={primaryHref}>{primaryCta}</MktBtn>}
             {secondaryCta && secondaryHref && (
-              <MktBtn href={secondaryHref} variant="secondary">{secondaryCta}</MktBtn>
+              <MktBtn href={secondaryHref} variant="secondary">
+                {secondaryCta}
+              </MktBtn>
             )}
           </div>
         )}
       </MktContainer>
     </MktSection>
+  );
+}
+
+export function MktPageHeroBanner({
+  eyebrow,
+  eyebrowIcon: EyebrowIcon,
+  title,
+  highlight,
+  description,
+  backgroundImage,
+  imageAlt = '',
+  primaryCta,
+  primaryHref,
+  secondaryCta,
+  secondaryHref,
+}: {
+  eyebrow?: string;
+  eyebrowIcon?: LucideIcon;
+  title: string;
+  highlight?: string;
+  description: string;
+  backgroundImage: string;
+  imageAlt?: string;
+  primaryCta?: string;
+  primaryHref?: string;
+  secondaryCta?: string;
+  secondaryHref?: string;
+}) {
+  return (
+    <section className="mk-page-hero-banner">
+      <div className="mk-page-hero-banner__bg" aria-hidden>
+        <img src={backgroundImage} alt="" className="mk-page-hero-banner__photo" />
+        <div className="mk-page-hero-banner__gradient" />
+      </div>
+      <MktContainer className="mk-page-hero-banner__content">
+        <div className="mk-page-hero-banner__copy space-y-5">
+          {eyebrow && (
+            <MktEyebrow icon={EyebrowIcon} className="mk-eyebrow--light">
+              {eyebrow}
+            </MktEyebrow>
+          )}
+          <h1 className="mk-page-hero-banner__title">
+            {title}
+            {highlight && (
+              <>
+                <br />
+                <span className="text-white/70">{highlight}</span>
+              </>
+            )}
+          </h1>
+          <p className="mk-page-hero-banner__subtitle">{description}</p>
+          {(primaryCta || secondaryCta) && (
+            <div className="flex flex-col sm:flex-row gap-3 pt-1">
+              {primaryCta && primaryHref && (
+                <MktBtn href={primaryHref} variant="teal">
+                  {primaryCta}
+                </MktBtn>
+              )}
+              {secondaryCta && secondaryHref && (
+                <MktBtn href={secondaryHref} variant="on-dark">
+                  {secondaryCta}
+                </MktBtn>
+              )}
+            </div>
+          )}
+        </div>
+      </MktContainer>
+    </section>
   );
 }
 
@@ -133,15 +219,16 @@ export function MktCTA({
   secondaryHref?: string;
 }) {
   return (
-    <MktSection>
+    <MktSection className="mk-cta-band">
+      <div className="mk-cta-band__stripes" aria-hidden />
       <MktContainer>
-        <div className="mk-card mk-card--dark p-10 sm:p-14 text-center space-y-5">
-          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">{title}</h2>
-          <p className="text-sm text-white/70 max-w-lg mx-auto leading-relaxed">{description}</p>
-          <div className="mk-cta__actions">
-            <MktBtn href={primaryHref} className="mk-cta__btn-primary">{primaryCta}</MktBtn>
+        <div className="mk-cta-band__inner">
+          <h2 className="mk-cta-band__title">{title}</h2>
+          <p className="mk-cta-band__desc">{description}</p>
+          <div className="mk-cta-band__actions">
+            <MktBtn href={primaryHref}>{primaryCta}</MktBtn>
             {secondaryCta && secondaryHref && (
-              <MktBtn href={secondaryHref} variant="secondary" className="mk-cta__btn-secondary">
+              <MktBtn href={secondaryHref} variant="secondary">
                 {secondaryCta}
               </MktBtn>
             )}
