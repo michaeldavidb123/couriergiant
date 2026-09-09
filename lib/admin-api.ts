@@ -14,13 +14,29 @@ import {
 type ApiEnvelope<T> = {
   success?: boolean;
   data?: T;
-  message?: string;
-  error?: string;
+  message?: string | string[];
+  error?: string | string[];
+  details?: string | string[];
 };
 
+function asErrorParts(value: unknown): string[] {
+  if (Array.isArray(value)) return value.flatMap(asErrorParts);
+  if (typeof value === 'string' && value.trim()) return [value.trim()];
+  if (value && typeof value === 'object' && 'message' in value) {
+    return asErrorParts((value as { message?: unknown }).message);
+  }
+  return [];
+}
+
 function unwrapError(json: ApiEnvelope<unknown> | null, fallback: string) {
-  const message = json?.error || json?.message || (json?.data as { message?: string } | undefined)?.message;
-  return typeof message === 'string' && message.trim() ? message : fallback;
+  const parts = [
+    ...asErrorParts(json?.error),
+    ...asErrorParts(json?.message),
+    ...asErrorParts(json?.details),
+    ...asErrorParts((json?.data as { message?: unknown } | undefined)?.message),
+  ];
+  const unique = [...new Set(parts.filter((part) => part && part !== 'Bad Request'))];
+  return unique.join('. ') || fallback;
 }
 
 async function adminFetch<T>(path: string, init: RequestInit = {}): Promise<T> {

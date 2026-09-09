@@ -174,7 +174,7 @@ const emptyForm = (): ParcelForm => ({
   destCountry: '',
   destLat: '',
   destLng: '',
-  totalTravelHours: '',
+  totalTravelHours: '48',
   isActive: true,
   targetUserId: '',
   images: [],
@@ -269,6 +269,89 @@ function toLocalInput(iso?: string | null) {
   if (Number.isNaN(d.getTime())) return '';
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+const DEFAULT_TRAVEL_HOURS = 48;
+
+function clip(value: string, max: number) {
+  return value.trim().slice(0, max);
+}
+
+function toIsoOrNull(value?: string | null) {
+  const raw = (value || '').trim();
+  if (!raw) return null;
+  const local = raw.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/);
+  if (local) {
+    const date = new Date(
+      Number(local[1]),
+      Number(local[2]) - 1,
+      Number(local[3]),
+      Number(local[4]),
+      Number(local[5]),
+      Number(local[6] || 0),
+    );
+    return Number.isNaN(date.getTime()) ? null : date.toISOString();
+  }
+  const date = new Date(raw);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+}
+
+function parsedTravelHours(value: string) {
+  const hours = Number(value);
+  return Number.isFinite(hours) && hours >= 0.5 ? hours : DEFAULT_TRAVEL_HOURS;
+}
+
+function buildTemplateEvents(
+  form: Pick<ParcelForm, 'originLabel' | 'destLabel' | 'originLat' | 'originLng' | 'destLat' | 'destLng'>,
+  hours: number,
+): EventForm[] {
+  const origin = form.originLabel.trim();
+  const dest = form.destLabel.trim();
+  const last = JOURNEY_TEMPLATE.length - 1;
+  const events = applyManualProgress(
+    JOURNEY_TEMPLATE.map((step, index) => {
+      const isFirst = index === 0;
+      const isLast = index === last;
+      return emptyEvent({
+        ...step,
+        locationLabel: isFirst ? origin : isLast ? dest : index < last / 2 ? origin : dest,
+        lat: isFirst ? form.originLat : isLast ? form.destLat : '',
+        lng: isFirst ? form.originLng : isLast ? form.destLng : '',
+        durationHours: String(roundHours(hours / JOURNEY_TEMPLATE.length)),
+      });
+    }),
+    0,
+  );
+  return applyTravelWindows(events, hours);
+}
+
+function ensureJourney(form: ParcelForm): ParcelForm {
+  const hours = parsedTravelHours(form.totalTravelHours);
+  let events = form.events;
+  if (!events.length) {
+    events = buildTemplateEvents(form, hours);
+  } else {
+    const last = events.length - 1;
+    events = events.map((event, index) => ({
+      ...event,
+      title: event.title.trim() || JOURNEY_TEMPLATE[index]?.title || `Step ${index + 1}`,
+      locationLabel:
+        event.locationLabel.trim() ||
+        (index === 0 ? form.originLabel.trim() : index === last ? form.destLabel.trim() : '') ||
+        form.originLabel.trim() ||
+        form.destLabel.trim() ||
+        'In transit',
+      statusKey: event.statusKey.trim() || slugStatusKey(event.title, `step_${index + 1}`),
+    }));
+    if (events.some((event) => !toIsoOrNull(event.windowStart))) {
+      events = applyTravelWindows(events, hours);
+    }
+  }
+  return {
+    ...form,
+    totalTravelHours: String(hours),
+    events,
+  };
 }
 
 function numOrNull(value: string) {
@@ -398,66 +481,67 @@ function parcelToForm(parcel: CourierParcel): ParcelForm {
 }
 
 function formToPayload(form: ParcelForm) {
+  const senderEmail = form.senderEmail.trim();
+  const receiverEmail = form.receiverEmail.trim();
   return {
-    trackingCode: form.trackingCode.trim() || undefined,
-    referenceNo: form.referenceNo.trim() || null,
-    courierName: form.courierName.trim() || 'VeloRoute',
-    serviceType: form.serviceType.trim() || 'Express International',
+    trackingCode: clip(form.trackingCode, 40) || undefined,
+    referenceNo: clip(form.referenceNo, 80) || null,
+    courierName: clip(form.courierName, 80) || 'VeloRoute',
+    serviceType: clip(form.serviceType, 80) || 'Express International',
     status: form.status,
     progressMode: form.progressMode,
     currentStepIndex: form.progressMode !== 'auto' ? currentStepIndex(form.events) : undefined,
     weightKg: numOrNull(form.weightKg),
-    images: form.images.map((url) => url.trim()).filter(Boolean),
+    images: form.images.map((url) => clip(url, 800)).filter(Boolean),
     documents: form.documents
       .map((doc) => ({
-        title: doc.title.trim() || 'Document',
-        url: doc.url.trim(),
-        kind: (doc.kind || 'Other').trim() || 'Other',
-        fileName: doc.fileName?.trim() || null,
+        title: clip(doc.title, 120) || 'Document',
+        url: clip(doc.url, 800),
+        kind: clip(doc.kind || 'Other', 80) || 'Other',
+        fileName: clip(doc.fileName || '', 160) || null,
       }))
       .filter((doc) => doc.url),
     sender: {
-      name: form.shipperName.trim(),
-      phone: textOrNull(form.senderPhone),
-      email: textOrNull(form.senderEmail),
-      address: textOrNull(form.senderAddress),
+      name: clip(form.shipperName, 160),
+      phone: clip(form.senderPhone, 40) || null,
+      email: senderEmail && isValidEmail(senderEmail) ? clip(senderEmail, 160) : null,
+      address: clip(form.senderAddress, 300) || null,
     },
     receiver: {
-      name: form.receiverName.trim(),
-      phone: textOrNull(form.receiverPhone),
-      email: textOrNull(form.receiverEmail),
-      address: textOrNull(form.receiverAddress),
+      name: clip(form.receiverName, 160),
+      phone: clip(form.receiverPhone, 40) || null,
+      email: receiverEmail && isValidEmail(receiverEmail) ? clip(receiverEmail, 160) : null,
+      address: clip(form.receiverAddress, 300) || null,
     },
-    originLabel: form.originLabel.trim(),
-    originCountry: form.originCountry.trim() || null,
+    originLabel: clip(form.originLabel, 200),
+    originCountry: clip(form.originCountry, 80) || null,
     originLat: numOrNull(form.originLat),
     originLng: numOrNull(form.originLng),
-    destLabel: form.destLabel.trim(),
-    destCountry: form.destCountry.trim() || null,
+    destLabel: clip(form.destLabel, 200),
+    destCountry: clip(form.destCountry, 80) || null,
     destLat: numOrNull(form.destLat),
     destLng: numOrNull(form.destLng),
     isActive: form.isActive,
     targetUserId: form.targetUserId.trim() || null,
-    events: form.events.map((event, index) => ({
-      statusKey: event.statusKey.trim() || slugStatusKey(event.title, `step_${index + 1}`),
-      title: event.title.trim(),
-      iconKey: event.iconKey,
-      occurredAt: event.windowStart
-        ? new Date(event.windowStart).toISOString()
-        : event.occurredAt
-          ? new Date(event.occurredAt).toISOString()
-          : null,
-      windowStart: event.windowStart ? new Date(event.windowStart).toISOString() : null,
-      windowEnd: event.windowEnd ? new Date(event.windowEnd).toISOString() : null,
-      locationLabel: event.locationLabel.trim(),
-      landmarkKind: event.landmarkKind,
-      lat: numOrNull(event.lat),
-      lng: numOrNull(event.lng),
-      notes: event.notes.trim() || null,
-      isCompleted: event.isCompleted,
-      isCurrent: event.isCurrent,
-      sortOrder: index,
-    })),
+    events: form.events.map((event, index) => {
+      const windowStart = toIsoOrNull(event.windowStart) || toIsoOrNull(event.occurredAt);
+      return {
+        statusKey: clip(event.statusKey, 80) || slugStatusKey(event.title, `step_${index + 1}`),
+        title: clip(event.title, 160) || `Step ${index + 1}`,
+        iconKey: event.iconKey || 'package',
+        occurredAt: windowStart,
+        windowStart,
+        windowEnd: toIsoOrNull(event.windowEnd),
+        locationLabel: clip(event.locationLabel, 200) || clip(form.originLabel, 200) || 'In transit',
+        landmarkKind: event.landmarkKind,
+        lat: numOrNull(event.lat),
+        lng: numOrNull(event.lng),
+        notes: clip(event.notes, 500) || null,
+        isCompleted: event.isCompleted,
+        isCurrent: event.isCurrent,
+        sortOrder: index,
+      };
+    }),
   };
 }
 
