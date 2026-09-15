@@ -4543,6 +4543,49 @@ body.mk-mobile-nav-open {
 
 @keyframes vr-admin-spin { to { transform: rotate(360deg); } }
 
+.vr-admin-mail {
+  display: grid;
+  min-height: 28rem;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .vr-admin-mail {
+    grid-template-columns: minmax(16rem, 22rem) 1fr;
+  }
+}
+
+.vr-admin-mail__list {
+  max-height: 28rem;
+  overflow-y: auto;
+  border-bottom: 1px solid #f4f4f0;
+}
+
+@media (min-width: 768px) {
+  .vr-admin-mail__list {
+    max-height: 42rem;
+    border-bottom: 0;
+    border-right: 1px solid #f4f4f0;
+  }
+}
+
+.vr-admin-mail__row {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  border: 0;
+  border-bottom: 1px solid #f4f4f0;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+
+.vr-admin-mail__row:last-child { border-bottom: 0; }
+.vr-admin-mail__row:hover { background: #fafaf8; }
+.vr-admin-mail__row.is-active { background: #f3f3f0; }
+
 .vr-admin-login {
   min-height: 100vh;
   display: grid;
