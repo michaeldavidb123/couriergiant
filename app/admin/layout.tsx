@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { LogOut, Package } from 'lucide-react';
+import Image from 'next/image';
+import { LogOut } from 'lucide-react';
 import { adminLogout, adminMe } from '@/lib/admin-api';
 import { getAdminUser } from '@/lib/admin-auth';
 import { SITE } from '@/lib/site-config';
@@ -59,7 +60,7 @@ function AdminShell({ children }: { children: React.ReactNode }) {
       <header className="vr-admin__bar">
         <Link href="/admin" className="vr-admin__brand">
           <span className="vr-admin__mark">
-            <Package strokeWidth={2} />
+            <Image src="/brand/couriergiant-mark.png" alt="" width={32} height={32} priority />
           </span>
           {SITE.name}
           <em>Admin</em>

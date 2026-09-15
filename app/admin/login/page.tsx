@@ -3,7 +3,8 @@
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Eye, EyeOff, Loader2, Package } from 'lucide-react';
+import Image from 'next/image';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { adminLogin } from '@/lib/admin-api';
 import { SITE } from '@/lib/site-config';
 
@@ -33,7 +34,7 @@ export default function AdminLoginPage() {
       <form onSubmit={onSubmit} className="vr-admin-login__card">
         <Link href="/" className="vr-admin__brand vr-admin__brand--center">
           <span className="vr-admin__mark">
-            <Package strokeWidth={2} />
+            <Image src="/brand/couriergiant-mark.png" alt="" width={40} height={40} priority />
           </span>
           {SITE.name}
         </Link>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Package } from 'lucide-react';
+import Image from 'next/image';
 import { SITE } from '@/lib/site-config';
 
 const STORAGE_KEY = 'couriergiant_preloader_done';
@@ -75,7 +75,14 @@ export default function Preloader() {
           <span className="vr-preloader__arc vr-preloader__arc--a" aria-hidden />
           <span className="vr-preloader__arc vr-preloader__arc--b" aria-hidden />
           <span className="vr-preloader__hub" aria-hidden>
-            <Package className="w-5 h-5" strokeWidth={2} />
+            <Image
+              src="/brand/couriergiant-mark.png"
+              alt=""
+              width={40}
+              height={40}
+              className="rounded-xl"
+              priority
+            />
           </span>
         </div>
         <p className="vr-preloader__name">{SITE.name}</p>
