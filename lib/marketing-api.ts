@@ -12,7 +12,7 @@ export async function submitContact(payload: ContactPayload): Promise<{ message:
   const res = await fetch(`${apiRoot()}/marketing/contact`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...payload, source: 'courier' }),
   });
   const json = await res.json().catch(() => null);
   const message =
