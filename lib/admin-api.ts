@@ -343,6 +343,8 @@ export const parcelsAdminApi = {
       body: JSON.stringify(body),
     });
   },
+  // AdminMailController is @Controller('admin') + @Roles(UserRole.admin).
+  // adminFetch already prefixes apiRoot() (/api/v1), so these are /api/v1/admin/mail/webhooks/...
   listInboundMail(params: { limit?: number; unread?: boolean } = {}) {
     const query = new URLSearchParams();
     query.set('limit', String(params.limit ?? 80));
