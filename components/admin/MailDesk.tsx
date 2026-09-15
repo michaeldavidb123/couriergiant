@@ -1,10 +1,11 @@
 'use client';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { parcelsAdminApi } from '@/lib/admin-api';
 import { type CourierParcel } from '@/lib/parcels-api';
-import { Loader2, Mail, Send } from 'lucide-react';
+import { Inbox, Loader2, Mail, Send } from 'lucide-react';
 
 function toast(message: string) {
   window.alert(message);
@@ -15,8 +16,8 @@ export default function MailDesk() {
   const parcelQuery = searchParams.get('parcel') || '';
   const [parcels, setParcels] = useState<CourierParcel[]>([]);
   const [parcelId, setParcelId] = useState(parcelQuery);
-  const [to, setTo] = useState('');
-  const [subject, setSubject] = useState('');
+  const [to, setTo] = useState(searchParams.get('to') || '');
+  const [subject, setSubject] = useState(searchParams.get('subject') || '');
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   const [settingsBusy, setSettingsBusy] = useState(false);
@@ -108,14 +109,20 @@ export default function MailDesk() {
 
   return (
     <div className="space-y-6 pb-16">
-      <div>
-        <h1 className="text-2xl font-extrabold text-zinc-900 flex items-center gap-2">
-          <Mail className="w-7 h-7 text-zinc-600" />
-          Send mail
-        </h1>
-        <p className="text-sm text-zinc-500 mt-1">
-          Email a sender or receiver about a shipment, and keep CourierGiant SMTP settings here.
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-extrabold text-zinc-900 flex items-center gap-2">
+            <Mail className="w-7 h-7 text-zinc-600" />
+            Send mail
+          </h1>
+          <p className="text-sm text-zinc-500 mt-1">
+            Email a sender or receiver about a shipment, and keep CourierGiant SMTP settings here.
+          </p>
+        </div>
+        <Link href="/admin/mail/inbox" className="vr-admin-btn vr-admin-btn--ghost inline-flex items-center gap-2">
+          <Inbox className="w-4 h-4" />
+          Inbox
+        </Link>
       </div>
 
       <form onSubmit={send} className="vr-admin-card p-5 space-y-4">

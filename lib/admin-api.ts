@@ -117,6 +117,128 @@ export type UgcUser = {
   companyName?: string | null;
 };
 
+export type MailChannel = 'platform' | 'courier' | string;
+
+export type InboundMailMessage = {
+  id: string;
+  fromAddress?: string | null;
+  toAddresses?: string[] | string | null;
+  ccAddresses?: string[] | string | null;
+  subject?: string | null;
+  textBody?: string | null;
+  htmlBody?: string | null;
+  readAt?: string | null;
+  createdAt?: string | null;
+  channel?: MailChannel | null;
+};
+
+export type OutboundMailMessage = {
+  id: string;
+  fromAddress?: string | null;
+  toAddress?: string | null;
+  toAddresses?: string[] | string | null;
+  subject?: string | null;
+  textBody?: string | null;
+  htmlBody?: string | null;
+  createdAt?: string | null;
+  channel?: MailChannel | null;
+  status?: string | null;
+  provider?: string | null;
+};
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
+}
+
+function firstString(...values: unknown[]): string | null {
+  for (const value of values) {
+    if (typeof value === 'string' && value.trim()) return value;
+    if (typeof value === 'number' && Number.isFinite(value)) return String(value);
+  }
+  return null;
+}
+
+export function mailAddresses(value: unknown): string[] {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.flatMap(mailAddresses);
+  if (typeof value === 'string') {
+    return value
+      .split(/[,;]/)
+      .map((part) => part.trim())
+      .filter(Boolean);
+  }
+  const obj = asRecord(value);
+  if (!obj) return [];
+  return mailAddresses(obj.email || obj.address || obj.value || obj.to);
+}
+
+function asMailList<T>(payload: unknown): T[] {
+  if (Array.isArray(payload)) return payload as T[];
+  const obj = asRecord(payload);
+  if (!obj) return [];
+  for (const key of ['items', 'messages', 'inbound', 'outbound', 'rows', 'emails', 'data']) {
+    if (Array.isArray(obj[key])) return obj[key] as T[];
+  }
+  if (obj.id) return [payload as T];
+  return [];
+}
+
+function unwrapMailRecord(payload: unknown): Record<string, unknown> | null {
+  const obj = asRecord(payload);
+  if (!obj) return null;
+  for (const key of ['message', 'inbound', 'outbound', 'email', 'item']) {
+    const nested = asRecord(obj[key]);
+    if (nested) return nested;
+  }
+  return obj;
+}
+
+function normalizeInboundMail(raw: unknown): InboundMailMessage | null {
+  const obj = unwrapMailRecord(raw);
+  if (!obj) return null;
+  const id = firstString(obj.id, obj.emailId, obj.email_id);
+  if (!id) return null;
+  return {
+    id,
+    fromAddress: firstString(obj.fromAddress, obj.from_address, obj.from),
+    toAddresses: (obj.toAddresses || obj.to_addresses || obj.to || obj.recipients) as InboundMailMessage['toAddresses'],
+    ccAddresses: (obj.ccAddresses || obj.cc_addresses || obj.cc) as InboundMailMessage['ccAddresses'],
+    subject: firstString(obj.subject),
+    textBody: firstString(obj.textBody, obj.text_body, obj.text, obj.body),
+    htmlBody: firstString(obj.htmlBody, obj.html_body, obj.html),
+    readAt: firstString(obj.readAt, obj.read_at),
+    createdAt: firstString(obj.createdAt, obj.created_at, obj.receivedAt, obj.received_at),
+    channel: firstString(obj.channel),
+  };
+}
+
+function normalizeOutboundMail(raw: unknown): OutboundMailMessage | null {
+  const obj = unwrapMailRecord(raw);
+  if (!obj) return null;
+  const id = firstString(obj.id, obj.emailId, obj.email_id);
+  if (!id) return null;
+  return {
+    id,
+    fromAddress: firstString(obj.fromAddress, obj.from_address, obj.from),
+    toAddress: firstString(obj.toAddress, obj.to_address, obj.to),
+    toAddresses: (obj.toAddresses || obj.to_addresses || obj.to || obj.recipients) as OutboundMailMessage['toAddresses'],
+    subject: firstString(obj.subject),
+    textBody: firstString(obj.textBody, obj.text_body, obj.text, obj.body),
+    htmlBody: firstString(obj.htmlBody, obj.html_body, obj.html),
+    createdAt: firstString(obj.createdAt, obj.created_at, obj.sentAt, obj.sent_at),
+    channel: firstString(obj.channel),
+    status: firstString(obj.status, obj.deliveryStatus, obj.delivery_status),
+    provider: firstString(obj.provider),
+  };
+}
+
+export function isCourierGiantInbound(message: InboundMailMessage): boolean {
+  if ((message.channel || '').toLowerCase() === 'courier') return true;
+  return mailAddresses(message.toAddresses).some((addr) => addr.toLowerCase().includes('couriergiant.com'));
+}
+
 export type SmtpSettingsView = {
   host: string | null;
   port: number | null;
@@ -220,6 +342,34 @@ export const parcelsAdminApi = {
       method: 'POST',
       body: JSON.stringify(body),
     });
+  },
+  listInboundMail(params: { limit?: number; unread?: boolean } = {}) {
+    const query = new URLSearchParams();
+    query.set('limit', String(params.limit ?? 80));
+    if (params.unread) query.set('unread', 'true');
+    return adminFetch<unknown>(`/admin/mail/webhooks/inbound?${query.toString()}`).then((res) => ({
+      messages: asMailList<unknown>(res).map(normalizeInboundMail).filter((row): row is InboundMailMessage => Boolean(row)),
+    }));
+  },
+  getInboundMail(id: string) {
+    return adminFetch<unknown>(`/admin/mail/webhooks/inbound/${encodeURIComponent(id)}`).then((res) => ({
+      message: normalizeInboundMail(res),
+    }));
+  },
+  markInboundMailRead(id: string) {
+    return adminFetch<unknown>(`/admin/mail/webhooks/inbound/${encodeURIComponent(id)}/read`, {
+      method: 'PATCH',
+    }).then((res) => ({
+      message: normalizeInboundMail(res),
+    }));
+  },
+  listOutboundMail(params: { limit?: number; channel?: string } = {}) {
+    const query = new URLSearchParams();
+    query.set('limit', String(params.limit ?? 80));
+    query.set('channel', params.channel || 'courier');
+    return adminFetch<unknown>(`/admin/mail/webhooks/outbound?${query.toString()}`).then((res) => ({
+      messages: asMailList<unknown>(res).map(normalizeOutboundMail).filter((row): row is OutboundMailMessage => Boolean(row)),
+    }));
   },
   createDocument(body: { parcelId: string; title: string; kind?: string; content?: string; url?: string }) {
     return adminFetch<{ parcel: CourierParcel; message?: string }>('/parcels/documents', {
