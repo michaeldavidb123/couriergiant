@@ -20,14 +20,14 @@ export default function Icon() {
       >
         <span
           style={{
-            fontSize: 280,
+            fontSize: 220,
             fontWeight: 800,
             color: '#ffffff',
             letterSpacing: '-0.06em',
             transform: 'translateY(-8px)',
           }}
         >
-          V
+          CG
         </span>
       </div>
     ),

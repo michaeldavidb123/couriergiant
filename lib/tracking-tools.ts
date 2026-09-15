@@ -34,8 +34,8 @@ export const TRACKING_TOOLS: Array<{
 ];
 
 export const PARTNER_CARRIERS = [
-  { code: 'VR', name: 'VeloRoute', region: 'Courier & last-mile' },
-  { code: 'EG', name: 'VeloRoute Express', region: 'International air' },
+  { code: 'VR', name: 'CourierGiant', region: 'Courier & last-mile' },
+  { code: 'EG', name: 'CourierGiant Express', region: 'International air' },
   { code: 'DHL', name: 'DHL Express', region: 'Global partner' },
   { code: 'FDX', name: 'FedEx', region: 'Global partner' },
   { code: 'UPS', name: 'UPS', region: 'Global partner' },
@@ -214,7 +214,7 @@ export function detectCarrier(code: string) {
   if (upper.startsWith('VR-') || upper.startsWith('VR')) return PARTNER_CARRIERS[0];
   if (upper.startsWith('EG')) return PARTNER_CARRIERS[1];
   const match = PARTNER_CARRIERS.find((carrier) => upper.startsWith(carrier.code));
-  return match || { code: 'VR', name: 'VeloRoute network', region: '1,200+ carrier partners' };
+  return match || { code: 'VR', name: 'CourierGiant network', region: '1,200+ carrier partners' };
 }
 
 export function parcelDocuments(parcel?: CourierParcel | null) {

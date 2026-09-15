@@ -4,7 +4,7 @@ import { isAdminTokenValid } from '@/lib/admin-token';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const raw = request.cookies.get('veloroute_admin_token')?.value;
+  const raw = request.cookies.get('couriergiant_admin_token')?.value;
   const token = raw ? decodeURIComponent(raw) : undefined;
   const validToken = isAdminTokenValid(token);
   const isLogin = pathname === '/admin/login';

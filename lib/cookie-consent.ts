@@ -7,10 +7,10 @@ export type CookieConsentPreferences = {
   updatedAt: string;
 };
 
-export const COOKIE_CONSENT_STORAGE_KEY = 'veloroute_cookie_consent';
-export const COOKIE_CONSENT_COOKIE_NAME = 'veloroute_cookie_consent';
-export const COOKIE_CONSENT_EVENT = 'veloroute:cookie-consent';
-export const COOKIE_SETTINGS_EVENT = 'veloroute:open-cookie-settings';
+export const COOKIE_CONSENT_STORAGE_KEY = 'couriergiant_cookie_consent';
+export const COOKIE_CONSENT_COOKIE_NAME = 'couriergiant_cookie_consent';
+export const COOKIE_CONSENT_EVENT = 'couriergiant:cookie-consent';
+export const COOKIE_SETTINGS_EVENT = 'couriergiant:open-cookie-settings';
 
 const CONSENT_MAX_AGE = 60 * 60 * 24 * 365;
 
@@ -34,7 +34,7 @@ export const COOKIE_CATEGORIES: {
   {
     id: 'analytics',
     label: 'Analytics',
-    description: 'Helps us understand traffic and improve VeloRoute with privacy-friendly analytics.',
+    description: 'Helps us understand traffic and improve CourierGiant with privacy-friendly analytics.',
   },
 ];
 

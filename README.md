@@ -1,4 +1,4 @@
-# VeloRoute — Courier Logistics
+# CourierGiant — Courier Logistics
 
 Next.js marketing site for courier & last-mile logistics, built to match the **Creliora** editorial marketing design system.
 
@@ -71,10 +71,10 @@ Uses the same `mk-*` marketing tokens as Creliora:
 
 ## Brand
 
-Default brand name: **VeloRoute**. Edit `SITE_NAME`, `SITE_DOMAIN`, `SITE_PHONE`, and `SITE_MAILBOXES` at the top of `lib/site-config.ts` to rebrand or update contact details.
+Default brand name: **CourierGiant**. Edit `SITE_NAME`, `SITE_DOMAIN`, `SITE_PHONE`, and `SITE_MAILBOXES` at the top of `lib/site-config.ts` to rebrand or update contact details.
 
 ## Env
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://veloroute.com
+NEXT_PUBLIC_SITE_URL=https://couriergiant.com
 ```

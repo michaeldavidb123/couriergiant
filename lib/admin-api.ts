@@ -81,7 +81,7 @@ export async function adminLogin(email: string, password: string) {
 
   const role = data.user?.role || data.profile?.userRole || data.profile?.user_role;
   if (!isAdminRole(role, data.profile?.hasAdminPrivileges)) {
-    throw new Error('This account is not a VeloRoute admin');
+    throw new Error('This account is not a CourierGiant admin');
   }
 
   persistAdminSession(data.access_token, data.user);
@@ -96,7 +96,7 @@ export async function adminMe() {
   const role = data.user?.role || data.profile?.userRole;
   if (!isAdminRole(role, data.profile?.hasAdminPrivileges)) {
     clearAdminSession();
-    throw new Error('This account is not a VeloRoute admin');
+    throw new Error('This account is not a CourierGiant admin');
   }
   const token = getAdminToken();
   if (token) persistAdminSession(token, data.user);

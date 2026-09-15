@@ -19,14 +19,14 @@ export default function AppleIcon() {
       >
         <span
           style={{
-            fontSize: 96,
+            fontSize: 72,
             fontWeight: 800,
             color: '#ffffff',
             letterSpacing: '-0.06em',
             transform: 'translateY(-3px)',
           }}
         >
-          V
+          CG
         </span>
       </div>
     ),

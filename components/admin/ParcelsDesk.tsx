@@ -121,7 +121,7 @@ export default function ParcelsDesk() {
 
   const resetDefaults = async () => {
     const ok = window.confirm(
-      'Reset demo parcels? This replaces every parcel with the VeloRoute demo set, including EG123456789IN.',
+      'Reset demo parcels? This replaces every parcel with the CourierGiant demo set, including EG123456789IN.',
     );
     if (!ok) return;
     setBusy('seed');
@@ -242,7 +242,7 @@ export default function ParcelsDesk() {
                     <div className="flex flex-wrap items-center gap-2">
                       <h2 className="font-mono text-base font-bold text-zinc-900">{parcel.trackingCode}</h2>
                       <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700">
-                        {parcel.courierName || 'VeloRoute'}
+                        {parcel.courierName || 'CourierGiant'}
                       </span>
                       <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700">
                         {statusLabel(parcel.status)}

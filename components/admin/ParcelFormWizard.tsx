@@ -153,7 +153,7 @@ const emptyEvent = (partial?: Partial<EventForm>): EventForm => ({
 const emptyForm = (): ParcelForm => ({
   trackingCode: '',
   referenceNo: nextOrderRef(),
-  courierName: 'VeloRoute',
+  courierName: 'CourierGiant',
   serviceType: 'Express International',
   status: 'pending',
   progressMode: 'manual',
@@ -412,7 +412,7 @@ function parcelToForm(parcel: CourierParcel): ParcelForm {
   return {
     trackingCode: parcel.trackingCode,
     referenceNo: parcel.referenceNo || nextOrderRef(),
-    courierName: parcel.courierName || 'VeloRoute',
+    courierName: parcel.courierName || 'CourierGiant',
     serviceType: parcel.serviceType,
     status: parcel.status,
     progressMode: parcel.progressMode || 'manual',
@@ -486,7 +486,7 @@ function formToPayload(form: ParcelForm) {
   return {
     trackingCode: clip(form.trackingCode, 40) || undefined,
     referenceNo: clip(form.referenceNo, 80) || null,
-    courierName: clip(form.courierName, 80) || 'VeloRoute',
+    courierName: clip(form.courierName, 80) || 'CourierGiant',
     serviceType: clip(form.serviceType, 80) || 'Express International',
     status: form.status,
     progressMode: form.progressMode,
@@ -1260,11 +1260,11 @@ export default function ParcelFormWizard({ parcelId }: { parcelId?: string }) {
                     value={form.courierName}
                     onChange={(e) => setForm((prev) => ({ ...prev, courierName: e.target.value }))}
                     className={inputClass(stepErrors.courierName)}
-                    placeholder="VeloRoute"
+                    placeholder="CourierGiant"
                     aria-invalid={Boolean(stepErrors.courierName)}
                   />
                   <datalist id="courier-name-options">
-                    <option value="VeloRoute" />
+                    <option value="CourierGiant" />
                     <option value="DHL" />
                     <option value="FedEx" />
                     <option value="UPS" />

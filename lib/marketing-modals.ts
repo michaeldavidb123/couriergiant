@@ -13,7 +13,7 @@ export type MarketingModalDefinition = {
   accent: 'teal' | 'emerald' | 'slate' | 'amber' | 'rose';
 };
 
-export const MARKETING_MODAL_STORAGE_KEY = 'veloroute_marketing_modals_v1';
+export const MARKETING_MODAL_STORAGE_KEY = 'couriergiant_marketing_modals_v1';
 
 export const MARKETING_MODAL_INITIAL_DELAY_MS = 90_000;
 export const MARKETING_MODAL_DISPLAY_MS = 3 * 60_000;

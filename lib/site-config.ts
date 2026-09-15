@@ -4,8 +4,8 @@ const u = (id: string, w = 1600, h = 900) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&q=80&w=${w}&h=${h}`;
 
 /** Change branding and contact details here — everything else derives from these. */
-const SITE_NAME = 'VeloRoute';
-const SITE_DOMAIN = 'veloroute.com';
+const SITE_NAME = 'CourierGiant';
+const SITE_DOMAIN = 'couriergiant.com';
 
 const SITE_MAILBOXES = {
   contact: 'hello',

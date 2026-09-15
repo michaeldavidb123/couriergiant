@@ -1,4 +1,4 @@
-# VeloRoute / CourierGiant — Render Blueprint
+# CourierGiant / CourierGiant — Render Blueprint
 # Service is configured as Docker on Render; Dockerfile uses Next.js standalone output.
 
 services:

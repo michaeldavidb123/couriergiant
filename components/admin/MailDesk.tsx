@@ -20,7 +20,7 @@ export default function MailDesk() {
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   const [settingsBusy, setSettingsBusy] = useState(false);
-  const [siteUrl, setSiteUrl] = useState('http://localhost:3001');
+  const [siteUrl, setSiteUrl] = useState('https://couriergiant.com');
   const [allowedOriginsText, setAllowedOriginsText] = useState('');
   const [adminEmail, setAdminEmail] = useState('');
   const [smtpHost, setSmtpHost] = useState('');
@@ -37,7 +37,7 @@ export default function MailDesk() {
     parcelsAdminApi
       .getSettings()
       .then((res) => {
-        setSiteUrl(res.siteUrl || 'http://localhost:3001');
+        setSiteUrl(/localhost|127\.0\.0\.1/i.test(res.siteUrl || '') ? 'https://couriergiant.com' : (res.siteUrl || 'https://couriergiant.com'));
         setAllowedOriginsText((res.allowedOrigins || []).join('\n'));
         setAdminEmail(res.adminEmail || '');
         setSmtpHost(res.smtp?.host || '');
@@ -114,7 +114,7 @@ export default function MailDesk() {
           Send mail
         </h1>
         <p className="text-sm text-zinc-500 mt-1">
-          Email a sender or receiver about a shipment, and keep VeloRoute SMTP settings here.
+          Email a sender or receiver about a shipment, and keep CourierGiant SMTP settings here.
         </p>
       </div>
 

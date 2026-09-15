@@ -152,7 +152,7 @@ export default function TrackingTools({ parcel }: { parcel?: CourierParcel | nul
   const printDocuments = () => {
     const html = `<!doctype html><html><head><title>${parcel?.trackingCode || 'Shipment'} documents</title>
       <style>body{font-family:ui-sans-serif,system-ui;padding:32px;color:#111}h1{font-size:20px}table{width:100%;border-collapse:collapse;margin-top:16px}td,th{border-bottom:1px solid #ddd;text-align:left;padding:8px;font-size:13px}</style></head><body>
-      <h1>VeloRoute shipment pack</h1>
+      <h1>CourierGiant shipment pack</h1>
       <p>Tracking ${parcel?.trackingCode || '—'} · AWB ${docs[0].id}</p>
       <table>
         <tr><th>Shipper</th><td>${parcel?.sender?.name || parcel?.shipperName || '—'}</td></tr>
@@ -386,7 +386,7 @@ export default function TrackingTools({ parcel }: { parcel?: CourierParcel | nul
             <>
               <h3>Multiple Carrier Tracking</h3>
               <p className="vr-tool__lead">
-                VeloRoute consolidates 1,200+ carriers. This shipment is routed as <strong>{carrier.name}</strong> ({carrier.region}).
+                CourierGiant consolidates 1,200+ carriers. This shipment is routed as <strong>{carrier.name}</strong> ({carrier.region}).
               </p>
               <form
                 className="vr-tool__form vr-tool__form--row"

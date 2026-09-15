@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Package } from 'lucide-react';
 import { SITE } from '@/lib/site-config';
 
-const STORAGE_KEY = 'veloroute_preloader_done';
+const STORAGE_KEY = 'couriergiant_preloader_done';
 const MIN_DISPLAY_MS = 750;
 
 export default function Preloader() {

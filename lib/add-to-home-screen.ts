@@ -1,4 +1,4 @@
-export const A2HS_STORAGE_KEY = 'veloroute_a2hs_dismissed_v1';
+export const A2HS_STORAGE_KEY = 'couriergiant_a2hs_dismissed_v1';
 
 /** Wait before showing the install prompt on first visit. */
 export const A2HS_INITIAL_DELAY_MS = 45_000;

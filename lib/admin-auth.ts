@@ -1,6 +1,6 @@
-const TOKEN_KEY = 'veloroute_admin_token';
-const USER_KEY = 'veloroute_admin_user';
-const COOKIE = 'veloroute_admin_token';
+const TOKEN_KEY = 'couriergiant_admin_token';
+const USER_KEY = 'couriergiant_admin_user';
+const COOKIE = 'couriergiant_admin_token';
 
 export type AdminUser = {
   id: string;

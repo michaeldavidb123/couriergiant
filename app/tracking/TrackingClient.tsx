@@ -94,7 +94,7 @@ function StatusBanner({ parcel }: { parcel: CourierParcel }) {
         </div>
         <div>
           <dt>Courier</dt>
-          <dd>{parcel.courierName || 'VeloRoute'}</dd>
+          <dd>{parcel.courierName || 'CourierGiant'}</dd>
         </div>
         <div>
           <dt>Current step</dt>
