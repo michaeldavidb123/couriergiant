@@ -22,7 +22,7 @@ function TrackingInputForm({ className = '', initialId = '' }: { className?: str
     <form onSubmit={submit} className={`mk-track-box ${className}`}>
       <input
         className="mk-input"
-        placeholder="Enter tracking ID e.g. EG123456789IN"
+        placeholder="Enter tracking ID"
         value={id}
         onChange={(e) => setId(e.target.value)}
         aria-label="Tracking ID"

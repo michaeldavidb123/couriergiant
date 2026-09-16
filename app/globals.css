@@ -3270,23 +3270,6 @@ body.mk-mobile-nav-open {
   min-width: 0;
 }
 
-.vr-tracking-hero__hint {
-  margin-top: 0.75rem;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.vr-tracking-hero__demo {
-  color: rgba(255, 255, 255, 0.92);
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.vr-tracking-hero__demo:hover {
-  color: #fff;
-}
-
 .vr-tracking-empty {
   padding-block: 2rem 2.5rem !important;
 }

@@ -27,8 +27,6 @@ NEXT_PUBLIC_API_URL=http://localhost:5001
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=
 ```
 
-Demo tracking codes: `EG123456789IN`, `VR-482910`.
-
 ## Admin
 
 Parcel admin lives on this site (not Creliora):
@@ -51,7 +49,7 @@ The account is stored in the `user_databank` table (`user_role = admin`).
 |-------|-------------|
 | `/` | Homepage — hero, services, process, stats |
 | `/services` | Service offerings |
-| `/tracking` | Shipment tracking (demo timeline) |
+| `/tracking` | Shipment tracking |
 | `/pricing` | Pricing plans |
 | `/about` | Company overview |
 | `/contact` | Contact form |

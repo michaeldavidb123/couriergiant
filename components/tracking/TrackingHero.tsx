@@ -6,8 +6,6 @@ import { MktContainer, MktEyebrow } from '@/components/marketing/MarketingUI';
 import { PAGE_HEROES } from '@/lib/site-config';
 import { HOME_IMAGES } from '@/lib/marketing-images';
 
-const DEMO_CODES = ['VR-482910', 'EG123456789IN'];
-
 export default function TrackingHero() {
   const hero = PAGE_HEROES.tracking;
 
@@ -42,17 +40,6 @@ export default function TrackingHero() {
 
           <div className="vr-tracking-hero__search">
             <TrackingInput className="vr-tracking-hero__input" />
-            <p className="vr-tracking-hero__hint">
-              Try a demo:{' '}
-              {DEMO_CODES.map((code, i) => (
-                <span key={code}>
-                  {i > 0 && ' · '}
-                  <a href={`/tracking?id=${encodeURIComponent(code)}`} className="vr-tracking-hero__demo">
-                    {code}
-                  </a>
-                </span>
-              ))}
-            </p>
           </div>
         </div>
       </MktContainer>
