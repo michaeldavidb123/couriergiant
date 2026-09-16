@@ -1,23 +1,17 @@
 # CourierGiant — Render Blueprint
-# Native Node so `next build` runs before `next start`.
-# The dashboard service was starting with yarn/next start and had no .next output.
+# This service must run as Docker. Native Node uses `yarn start` and has no
+# production `.next` build. Switch the dashboard Source runtime back to Docker.
 
 services:
   - type: web
     name: couriergiant
-    runtime: node
+    runtime: docker
     plan: starter
-    buildCommand: npm ci && npm run build
-    startCommand: npm start
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     envVars:
-      - key: NODE_VERSION
-        value: 20
       - key: NODE_ENV
         value: production
-      - key: YARN_PRODUCTION
-        value: "false"
-      - key: NPM_CONFIG_PRODUCTION
-        value: "false"
       - key: NEXT_PUBLIC_API_URL
         value: https://creliora-api.onrender.com
       - key: NEXT_PUBLIC_SITE_URL
