@@ -1,13 +1,17 @@
-# CourierGiant / CourierGiant — Render Blueprint
-# Service is configured as Docker on Render; Dockerfile uses Next.js standalone output.
+# CourierGiant — Render Blueprint
+# Native Node so `next build` runs before `next start`.
+# The dashboard service was starting with yarn/next start and had no .next output.
 
 services:
   - type: web
     name: couriergiant
-    runtime: docker
+    runtime: node
     plan: starter
-    dockerfilePath: ./Dockerfile
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
     envVars:
+      - key: NODE_VERSION
+        value: 20
       - key: NODE_ENV
         value: production
       - key: NEXT_PUBLIC_API_URL
