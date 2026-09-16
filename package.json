@@ -8,25 +8,26 @@
   "scripts": {
     "dev": "next dev --port 3001",
     "build": "next build",
+    "prestart": "node scripts/ensure-next-build.cjs",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
     "clsx": "^2.1.1",
     "lucide-react": "^1.35.0",
     "next": "16.2.12",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "tailwind-merge": "^3.6.0"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.12",
+    "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "devDependencies": {
+    "eslint": "^9",
+    "eslint-config-next": "16.2.12"
   }
 }

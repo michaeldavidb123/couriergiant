@@ -14,6 +14,10 @@ services:
         value: 20
       - key: NODE_ENV
         value: production
+      - key: YARN_PRODUCTION
+        value: "false"
+      - key: NPM_CONFIG_PRODUCTION
+        value: "false"
       - key: NEXT_PUBLIC_API_URL
         value: https://creliora-api.onrender.com
       - key: NEXT_PUBLIC_SITE_URL
